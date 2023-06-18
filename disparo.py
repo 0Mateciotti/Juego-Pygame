@@ -5,8 +5,7 @@ class Disparo:
         self.__ancho = ancho
         self.__alto = alto
         self.__imagen = imagen
-        self.__rect = ""
-        self.crear_disparo()
+        self.__rect = pygame.Rect((self.posicion[0], self.posicion[1], self.__ancho, self.__alto))
     def update_posicion(self):
 
         self.__rect.center = (self.posicion[0],self.posicion[1])
@@ -32,9 +31,3 @@ class Disparo:
     def draw(self,screen,posicion):
         screen.blit(self.imagen,posicion)
 
-    def crear_disparo(self):
-        imagen = pygame.image.load(self.__imagen)
-        imagen = pygame.transform.scale(imagen,(self.__ancho, self.__alto))
-
-        self.__imagen = imagen
-        self.__rect = pygame.Rect((self.posicion[0], self.posicion[1], self.__ancho, self.__alto))

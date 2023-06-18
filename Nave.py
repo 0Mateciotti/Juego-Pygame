@@ -18,11 +18,9 @@ class Nave:
         self.__vida = vida
         self.__cant_disparos = cant_disparos
 
-        imagen = pygame.image.load(self.__imagen)
-        imagen = pygame.transform.scale(imagen, (self.__ancho, self.__alto))
 
-        self.__imagen = imagen
-        self.__rect = pygame.Rect((self.posicion[0], self.posicion[1], self.ancho, self.alto))
+        self.rect = pygame.Rect((self.posicion[0], self.posicion[1], self.ancho, self.alto))
+        self.rect.topleft = self.posicion
 
     def __del__(self):
         print("Muerto")
@@ -120,13 +118,9 @@ class Nave:
 
         self.__del__()
 
-    def moverse(self,cantidad:int,direccion):
 
-        if direccion == 1:
-            self.posicion[0] += cantidad
-            
-        elif direccion == 0:
-            self.posicion[0] -= cantidad
+    def mover_enemigo(self,movimiento:int):
+        self.posicion[0] += movimiento
 
 
 def crear_disparo(img_disparo:str,posicion:list):
@@ -138,7 +132,6 @@ def crear_disparo(img_disparo:str,posicion:list):
     print("Disparo")
 
     return disparo
-
 
 
 

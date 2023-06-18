@@ -2,6 +2,7 @@ import pygame
 import json
 import re
 from Nave import Nave
+pygame.mixer.init()
 def detectar_colicion(rect_1,rect_2) ->bool:
     #FUNCIONALIDAD: SI EL TIPO ES 1, VA A VERIFICAR LA COLICION DEL rect_1 CON LA DEL rect_2. SI EL TIPO ES 0, VA A VERIFICAR LA COLISION DEL PUNTO 1 CON lista_rect
 
@@ -43,7 +44,7 @@ def generar_enemigos(enemigos:list,rectangulos_enemigos:list,pos:list,img,cantid
     for i in range(cantidad):
         aux = Nave(img,[a[0],a[1]],50,50)
         enemigos.append(aux)
-        rectangulos_enemigos.append(aux.rect)
+        #rectangulos_enemigos.append(aux.rect)
         a[0] += separacion
 
 
@@ -62,5 +63,14 @@ def generar_tandas(enemigos:list,rectangulos_enemigos:list,img,tanda:int):
             generar_enemigos(enemigos, rectangulos_enemigos, [x_segunda_tanda, 400], img, 2, 75)
             x_segunda_tanda += 400
 
+def cargar_imagen(imagen_url,escala:list):
+    retorno = pygame.image.load(imagen_url)
+    retorno = pygame.transform.scale(retorno,escala)
+    return retorno
 
+def cargar_sonido(sonido,volumen):
+    retorno = pygame.mixer.Sound(sonido)
+    retorno.set_volume(volumen)
+
+    return retorno
 
