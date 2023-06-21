@@ -226,7 +226,10 @@ with sqlite3.connect("bd_btf.db") as conexion:
                 screen.blit(disparo_enemigo.imagen, disparo_enemigo.posicion)
 
                 disparo_enemigo.posicion[1] += 5
-                pygame.draw.rect(screen, (255, 0, 0), disparo_enemigo.rect, 1)
+
+                if disparo_enemigo.posicion[0] >= ALTO_PANTALLA:#~~~~~~~~~~~~~~~~~BORRO DISPARO DEL ENEMIGO SI SALE DE LA PANTALLA~~~~~~~~~~~~~~
+                    disparos_enemigos.remove(disparo_enemigo)
+
 
                 if disparo_enemigo.rect.colliderect(jugador.rect):
                     flag_morir = True
