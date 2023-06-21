@@ -77,33 +77,33 @@ with sqlite3.connect("bd_btf.db") as conexion:
     flag_lista_jugadores = True
     flag_morir = False
     flag_jugador = True
+
     #~~~~~~~~~~~CONTADORES/OTROS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     contador_segundos = 0
     contador_lista_jugadores = 0
     contador_tandas = 0
     nombre_jugador = ""
     img_nombre_jugador = ""
+
     #~~~~~~~~~~~~~~TIMER~~~~~~~~~~~~~~~~~~
     timer = pygame.USEREVENT
     pygame.time.set_timer(timer,500)
     reloj = pygame.time.Clock()
+
     #~~~~~~~~~~~~~~INICIO DE JUEGO~~~~~~~~~~~~~~
     while run:
         for event in pygame.event.get():
 
-            if event.type == pygame.QUIT:#DETECTA SI CERRAMOS EL JUEGI
-                run = False
-
-            if flag_morir:#~~~~~~~~~~~~~~~~~~~~~DETECTO CUANDO MUERE Y CREA EL PERFIL DEL JUGADOR Y RESETEO VALORES PARA VOLVER A INICIAR~~~~~~~~~~~~~~~~~~~~
+            if flag_morir or event.type == pygame.QUIT:  # ~~~~~~~~~~~~~~~~~~~~~DETECTO CUANDO MUERE Y CREA EL PERFIL DEL JUGADOR Y SI CIERRO EL JUEGO~~~~~~~~~~~~~~~~~~~~
                 try:
-                    conexion.execute("insert into jugador(nombre,score) values (?,?)",(nombre_jugador,jugador.puntos))
+                    conexion.execute("insert into jugador(nombre,score) values (?,?)",
+                                        (nombre_jugador, jugador.puntos))
                     conexion.commit()
                     print("Jugador cargado")
                 except:
                     print("Erorr")
 
-
-                pygame.quit()
+                run = False
 
             if event.type == pygame.USEREVENT:#TIMER SEGUNDOS
                 contador_segundos += 1
@@ -141,6 +141,7 @@ with sqlite3.connect("bd_btf.db") as conexion:
             mostrar_puntuacion(jugador.puntos,screen)
 
             if len(enemigos) == 0:#~~~~~~~~~~~~~~~~~~~DETECTA CUANDO MATAMOS A TODOS LOS ENEMIGOS~~~~~~~~~~~~~~~~~~~
+                contador_segundos = 0
                 generar_tandas(enemigos, rectangulos_enemigos, img_ufo, contador_tandas)
                 sonido_levelup.play()
                 if contador_tandas > 0 and jugador.cant_disparos < 10:
@@ -213,7 +214,6 @@ with sqlite3.connect("bd_btf.db") as conexion:
             if contador_segundos == 5 and flag_nombre and iniciar:
                 contador_segundos = 0
 
-
                 if len(enemigos) > 0:
                     for i in range(random.randint(0,len(enemigos))):
 
@@ -227,7 +227,7 @@ with sqlite3.connect("bd_btf.db") as conexion:
 
                 disparo_enemigo.posicion[1] += 5
 
-                if disparo_enemigo.posicion[0] >= ALTO_PANTALLA:#~~~~~~~~~~~~~~~~~BORRO DISPARO DEL ENEMIGO SI SALE DE LA PANTALLA~~~~~~~~~~~~~~
+                if disparo_enemigo.posicion[1] >= ALTO_PANTALLA:#~~~~~~~~~~~~~~~~~BORRO DISPARO DEL ENEMIGO SI SALE DE LA PANTALLA~~~~~~~~~~~~~~
                     disparos_enemigos.remove(disparo_enemigo)
 
 
@@ -242,7 +242,7 @@ with sqlite3.connect("bd_btf.db") as conexion:
 
             if flag_jugador:#~~~~~~~SUBO LA DATA DEL JUGADOR A LA BASE DE DATOS~~~~~~~~~~~~~~~~~~~~~~~
                 for fila in cursor:
-                    aux = fuente.render(f"{fila[1]} {fila[2]}", True, colores.RED2)
+                    aux = fuente.render(f"{fila[1]}: {fila[2]}", True, colores.RED2)
                     lista_puntajes.append(aux)
                     flag_jugador = False
 
@@ -263,8 +263,6 @@ with sqlite3.connect("bd_btf.db") as conexion:
                 pygame.draw.rect(screen,(0,0,0),[420,430,230,75],8)
                 img_nombre_jugador = fuente.render(nombre_jugador, True, colores.BLACK)
                 screen.blit(img_nombre_jugador, [440, 450])
-
-
 
         reloj.tick(FPS)
         pygame.display.flip()
