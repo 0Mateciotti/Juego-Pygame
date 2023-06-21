@@ -1,6 +1,8 @@
 import pygame
 import colores
 
+
+
 def mostrar_puntuacion(puntuacion:str,screen) -> list:
     fuente = pygame.font.SysFont("Arial", 30)
 
@@ -12,3 +14,12 @@ def mostrar_puntuacion(puntuacion:str,screen) -> list:
 
     screen.blit(texto_score, (50,10))
     screen.blit(texto_puntuacion, (50, 45))
+
+def ingresar_nombre(nombre:str,screen):
+
+    fuente = pygame.font.SysFont("Arial", 30)
+    nombre += fuente.render(nombre)
+
+    screen.blit(nombre)
+
+    texto_nombre = fuente.render()

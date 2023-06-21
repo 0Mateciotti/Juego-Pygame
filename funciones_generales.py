@@ -1,6 +1,7 @@
 import pygame
 import json
 import re
+import random
 from Nave import Nave
 pygame.mixer.init()
 def detectar_colicion(rect_1,rect_2) ->bool:
@@ -19,49 +20,48 @@ def detectar_colicion_lista(rect,lista:list):
 
     return retorno
 
-
-def parse_puntos(archivo:str,) ->list:
+def parse_puntos(archivo:str,) -> list:
     i = 0
     with open(archivo,'r') as archivo:
         lista_puntos = []
         todo = archivo.read()
         nombre = re.findall(r'"Nombre": "([a-zA-Z0-9]+) ',todo)
-        tiempo = re.findall(r'"Tiempo": ([0-9]+)',todo)
         puntos = re.findall(r'"Puntos": ([0-9]+)',todo)
 
         for i in range(len(nombre)):
             dic_puntaje = {}
             dic_puntaje["Nombre"] = nombre[i]
-            dic_puntaje["Tiempo"] = tiempo[i]
             dic_puntaje["Puntos"] = puntos[i]
             lista_puntos.append(dic_puntaje)
             i += 1
     return lista_puntos
 
 def generar_enemigos(enemigos:list,rectangulos_enemigos:list,pos:list,img,cantidad,separacion:int):
+    #genera una cantidad especificada de enemigos utilizando una imagen determinada, y los añade a una lista de enemigos
     a = pos
-
     for i in range(cantidad):
         aux = Nave(img,[a[0],a[1]],50,50)
         enemigos.append(aux)
-        #rectangulos_enemigos.append(aux.rect)
-        a[0] += separacion
 
+        a[0] += separacion
 
 def generar_tandas(enemigos:list,rectangulos_enemigos:list,img,tanda:int):
     x_segunda_tanda = 100
-
-    if tanda == 1:
+    variacion_random = random.randint(30,50)
+    if tanda == 0:
         generar_enemigos(enemigos, rectangulos_enemigos, [100, 100], img, 5, 200)
         generar_enemigos(enemigos, rectangulos_enemigos, [200, 200], img, 4, 200)
         generar_enemigos(enemigos, rectangulos_enemigos, [300, 300], img, 3, 200)
-    if tanda > 1:
+    if tanda == 1:
         for i in range(3):
             generar_enemigos(enemigos, rectangulos_enemigos, [x_segunda_tanda, 100], img, 2, 75)
             generar_enemigos(enemigos, rectangulos_enemigos, [x_segunda_tanda, 200], img, 2, 75)
             generar_enemigos(enemigos, rectangulos_enemigos, [x_segunda_tanda, 300], img, 2, 75)
             generar_enemigos(enemigos, rectangulos_enemigos, [x_segunda_tanda, 400], img, 2, 75)
             x_segunda_tanda += 400
+    if tanda > 2:
+        for i in range(random.randint(10,15)):
+            generar_enemigos(enemigos,rectangulos_enemigos,[random.randint(100 + variacion_random,1000 + variacion_random),random.randint(100 + variacion_random,500 + variacion_random)],img,1,75)
 
 def cargar_imagen(imagen_url,escala:list):
     retorno = pygame.image.load(imagen_url)
@@ -73,4 +73,3 @@ def cargar_sonido(sonido,volumen):
     retorno.set_volume(volumen)
 
     return retorno
-

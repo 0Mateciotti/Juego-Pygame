@@ -18,7 +18,6 @@ class Nave:
         self.__vida = vida
         self.__cant_disparos = cant_disparos
 
-
         self.rect = pygame.Rect((self.posicion[0], self.posicion[1], self.ancho, self.alto))
         self.rect.topleft = self.posicion
 
